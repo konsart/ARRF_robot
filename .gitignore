@@ -1,11 +1,24 @@
 
-# ros2_ws
+# build artifacts
+build/
+*.elf
+*.hex
+*.o
+
+# ros2_ws (colcon)
 ros2_ws/install/
 ros2_ws/log/
 
-# python environment
+# environment
 .venv
 .env
 
 # cache
 __pycache__/
+*.py[cod]
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
