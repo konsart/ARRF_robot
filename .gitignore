@@ -1,0 +1,11 @@
+
+# ros2_ws
+ros2_ws/install/
+ros2_ws/log/
+
+# python environment
+.venv
+.env
+
+# cache
+__pycache__/
