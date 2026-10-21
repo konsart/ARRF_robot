@@ -42,7 +42,7 @@ class ServoBridge(Node):
             self._sbuf = self._sbuf[nl_ind+1:]
 
             if (sep_ind := msg.find(b':')) == -1: continue
-            if msg[:sep_ind] != b'angle': continue
+            if msg[:sep_ind] != b'current_angle': continue
             if not (data := msg[sep_ind+1:]).isdigit(): continue
 
             self.publisher_.publish(UInt16(data=int(data)))
@@ -58,7 +58,7 @@ def main(args=None) -> None:
         servo_bridge_node.ser.close()
         servo_bridge_node.get_logger().info("Keyboard interrupt")
         exit_code = KEYBOARD_EC
-    except SerialException:
+    except OSError:
         servo_bridge_node.get_logger().info("Port connection lost")
         exit_code = SERIAL_CON_EC
     finally:

@@ -5,7 +5,8 @@
 #define LED_PIN 4
 
 Servo servo;
-int tmp_angle = 0, cur_angle = 0;
+int cur_angle = 0;
+String _sbuf = "";
 
 void setup() {
   Serial.begin(115200);
@@ -16,22 +17,28 @@ void setup() {
 
 void loop() {
   while (Serial.available() > 0) {
-    String msg = Serial.readStringUntil('\n');
-    int sep_ind = msg.indexOf(':');
+    int nl_ind = _sbuf.indexOf('\n');
+    while (nl_ind != -1) {
+      String msg = _sbuf.substring(0, nl_ind);
+      _sbuf = _sbuf.substring(nl_ind+1);
 
-    if (sep_ind == -1) continue;
+      int sep_ind = msg.indexOf(':');
 
-    String cmd = msg.substring(0, sep_ind);
+      if (sep_ind == -1) continue;
 
-    if (cmd == "set_angle") {
-      cur_angle = msg.substring(sep_ind+1).toInt();
-      cur_angle = constrain(cur_angle, 0, 180);
-      
-      digitalWrite(LED_PIN, cur_angle - tmp_angle > 0);
+      String cmd = msg.substring(0, sep_ind);
 
-      servo.write(cur_angle);
+      if (cmd == "set_angle") {
+        cur_angle = msg.substring(sep_ind+1).toInt();
+        cur_angle = constrain(cur_angle, 0, 180);
+        
+        digitalWrite(LED_PIN, HIGH);
 
-      tmp_angle = cur_angle;
+        servo.write(cur_angle);
+        Serial.write(String("current angle:").concat(String(cur_angle)));
+
+        digitalWrite(LED_PIN, LOW);
+      }
     }
   }
 }
