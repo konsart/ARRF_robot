@@ -25,7 +25,7 @@ fi
 echo "[${success}*${reset}] ${success}compile complete${reset}"
 echo "[${progress}*${reset}] ${progress}uploading to $PORT${reset}"
 
-if ! arduino-cli upload -p "$PORT" --fqbn arduino:avr:uno arduino/servo_led ; then
+if ! arduino-cli upload -p "$PORT" --fqbn arduino:avr:uno --build-path build/arduino arduino/servo_led ; then
     echo "${error}upload failed${reset}"
     exit 4
 fi
