@@ -22,7 +22,9 @@ class ServoBridge(Node):
         try:
             self.ser = Serial(self.port, 115200)
         except SerialException:
-            self.get_logger().info('Port not found')
+            self.get_logger().error('Port not found')
+            self.destroy_node()
+            rclpy.shutdown()
             sys.exit(SERIAL_CON_EC)
         self._sbuf = b''
         
@@ -55,7 +57,10 @@ def main(args=None) -> None:
     try:
         rclpy.spin(servo_bridge_node)
     except KeyboardInterrupt:
-        servo_bridge_node.ser.close()
+        try: 
+            servo_bridge_node.ser.close()
+        except OSError:
+            pass
         servo_bridge_node.get_logger().info("Keyboard interrupt")
         exit_code = KEYBOARD_EC
     except OSError:
